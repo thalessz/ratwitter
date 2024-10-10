@@ -1,15 +1,22 @@
-create database ratwitter;
-use ratwitter;
 
-create table usuario(
-  	id integer primary key auto_increment not null,
-    nome varchar(255) not null,
-  	username varchar(255),
-  	password varchar(255),
-  	email varchar(255));
-    
-create table posts(
-	 id integer primary key auto_increment not null,
-   content text not null,
-	 user_id integer not null,
-	 foreign key(user_id) references usuario(id));
+CREATE DATABASE ratwitter;
+USE ratwitter;
+
+CREATE TABLE usuario (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE posts (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    content TEXT NOT NULL,
+    user_id INTEGER NOT NULL,
+    like_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES usuario(id) ON DELETE CASCADE
+);
