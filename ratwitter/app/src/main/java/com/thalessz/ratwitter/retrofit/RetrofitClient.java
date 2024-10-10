@@ -1,2 +1,3 @@
-package com.thalessz.ratwitter.retrofit;public class RetrofitClient {
+package com.thalessz.ratwitter.retrofit;
+public class RetrofitClient {
 }
