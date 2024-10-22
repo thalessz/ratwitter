@@ -28,5 +28,4 @@ public interface ApiService {
 
     @POST("/like_post/{post_id}")
     Call<Map<String, String>> likePost(@Path("post_id") int postId);
-
 }

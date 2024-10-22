@@ -21,6 +21,9 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
+    if not username or not password:
+        return jsonify({'message': 'Username e password são obrigatórios'}), 400
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -30,14 +33,16 @@ def login():
 
         if result is None:
             return jsonify({'message': 'Login inválido'}), 401
+        
         return jsonify(result), 200
 
     except mysql.Error as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify({'error': str(error)}), 500
 
     finally:
-        if conn.is_connected():
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
 
 @app.route('/cadastro', methods=['POST'])
@@ -48,6 +53,9 @@ def cadastro():
     password = data.get('password')
     email = data.get('email')
 
+    if not nome or not username or not password or not email:
+        return jsonify({'message': 'Todos os campos são obrigatórios'}), 400
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -57,11 +65,12 @@ def cadastro():
         return jsonify({'message': 'Cadastro realizado com sucesso'}), 201
 
     except mysql.Error as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify({'error': str(error)}), 500
 
     finally:
-        if conn.is_connected():
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
 
 @app.route('/fetch_posts', methods=['GET'])
@@ -69,17 +78,36 @@ def fetch_posts():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT * FROM posts ORDER BY created_at DESC"
+        
+        query = '''
+            SELECT id, content, user_id, created_at 
+            FROM posts 
+            ORDER BY created_at DESC;
+        '''
         cursor.execute(query)
         result = cursor.fetchall()
-        return jsonify(result), 200
+
+        if not result:
+            return jsonify({'message': 'Nenhum post encontrado'}), 200
+        
+        posts = []
+        for row in result:
+            posts.append({
+                'id': row['id'],
+                'content': row['content'],
+                'user_id': row['user_id'],
+                'created_at': row['created_at']
+            })
+
+        return jsonify(posts), 200
 
     except mysql.Error as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify({'error': str(error)}), 500
 
     finally:
-        if conn.is_connected():
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
 
 @app.route('/add_post', methods=['POST'])
@@ -87,6 +115,9 @@ def add_post():
     data = request.json
     content = data.get('content')
     user_id = data.get('user_id')
+
+    if not content or not user_id:
+        return jsonify({'message': 'Conteúdo e user_id são obrigatórios'}), 400
 
     try:
         conn = get_db_connection()
@@ -97,11 +128,12 @@ def add_post():
         return jsonify({'message': 'Post adicionado com sucesso'}), 201
 
     except mysql.Error as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify({'error': str(error)}), 500
 
     finally:
-        if conn.is_connected():
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
 
 @app.route('/like_post/<int:post_id>', methods=['POST'])
@@ -120,56 +152,13 @@ def like_post(post_id):
         return jsonify({'message': 'Post curtido com sucesso'}), 200
 
     except mysql.Error as error:
-        return jsonify({'message': str(error)}), 500
+        return jsonify({'error': str(error)}), 500
 
     finally:
-        if conn.is_connected():
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
-
-@app.route('/docs', methods=['GET'])
-def docs():
-    documentation = {
-        "API": "Ratwitter",
-        "Endpoints": {
-            "/login": {
-                "method": "POST",
-                "description": "Realiza o login do usuário.",
-                "body": {
-                    "username": "string",
-                    "password": "string"
-                }
-            },
-            "/cadastro": {
-                "method": "POST",
-                "description": "Cadastra um novo usuário.",
-                "body": {
-                    "nome": "string",
-                    "username": "string",
-                    "password": "string",
-                    "email": "string"
-                }
-            },
-            "/fetch_posts": {
-                "method": "GET",
-                "description": "Retorna todos os posts ordenados pela data de criação."
-            },
-            "/add_post": {
-                "method": "POST",
-                "description": "Adiciona um novo post.",
-                "body": {
-                    "content": "string",
-                    "user_id": "integer"
-                }
-            },
-            "/like_post/<post_id>": {
-                "method": "POST",
-                "description": "Incrementa a contagem de likes para um post específico."
-            }
-        }
-    }
-    
-    return jsonify(documentation), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

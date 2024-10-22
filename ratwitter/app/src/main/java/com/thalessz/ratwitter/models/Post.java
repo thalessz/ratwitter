@@ -16,6 +16,8 @@ public class Post {
         this.likeCount = likeCount;
         this.createdAt = createdAt;
     }
+    public Post() {}
+
 
     // Getters
     public int getId() {

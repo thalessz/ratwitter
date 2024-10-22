@@ -16,7 +16,6 @@ public class User {
         this.email = email;
         this.created_at = created_at;
     }
-
     // Getters
     public int getId() {
         return id;
