@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ratwitter</string>
+    <string name="str_username">\@edi_trintones</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat mas</string>
 </resources>

@@ -1,3 +1,5 @@
+TRABALHO FEITO POR THALES E JEAN
+
 1- crie o banco de dados no seu computador (no final do arquivo)
 2- execute o arquivo api.exe (se vc achar suspeito, o código fonte tá dentro do projeto :D )
 3- Pronto, agora só executar o projeto do android normalmente! (roda somente no emulador do andorid studio, devido ao 10.0.2.2 de endereço na api)
