@@ -1,25 +1,23 @@
 package com.thalessz.ratwitter.models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private int id;
     private String nome;
     private String username;
     private String password;
     private String email;
-    private String created_at;
 
-    public User(int id, String nome, String username, String password, String email, String created_at) {
-        this.id = id;
+    public User( String nome, String username, String password, String email) {
         this.nome = nome;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.created_at = created_at;
+    }
+    public User(){
     }
     // Getters
-    public int getId() {
-        return id;
-    }
 
     public String getNome() {
         return nome;
@@ -37,14 +35,7 @@ public class User {
         return email;
     }
 
-    public String getCreatedAt() {
-        return created_at;
-    }
-
     // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -60,9 +51,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setCreatedAt(String created_at) {
-        this.created_at = created_at;
     }
 }

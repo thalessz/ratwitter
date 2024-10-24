@@ -31,3 +31,9 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+#Python
+.venv
+venv
+__pycache__
+

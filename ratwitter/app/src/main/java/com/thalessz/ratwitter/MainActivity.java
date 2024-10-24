@@ -10,6 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.gson.Gson;
+import com.thalessz.ratwitter.models.User;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,13 +27,19 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
             finish();
+        } else {
+            String json = sharedPreferences.getString("user", null);
+            if (json != null) {
+                User user = new Gson().fromJson(json, User.class);
+            }
+
         }
 
         //Prosseguir o código

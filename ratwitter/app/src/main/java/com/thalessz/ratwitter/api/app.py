@@ -27,7 +27,7 @@ def login():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT * FROM usuario WHERE username = %s AND password = %s"
+        query = "SELECT NOME, USERNAME, EMAIL, PASSWORD FROM usuario WHERE username = %s AND password = %s"
         cursor.execute(query, (username, password))
         result = cursor.fetchone()
 

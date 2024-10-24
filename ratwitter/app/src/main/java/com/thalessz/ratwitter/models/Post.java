@@ -1,8 +1,9 @@
 package com.thalessz.ratwitter.models;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Post {
+public class Post implements Serializable {
     private int id;
     private String content;
     private int userId;

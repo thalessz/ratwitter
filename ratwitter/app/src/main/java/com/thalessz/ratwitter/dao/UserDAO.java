@@ -11,11 +11,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserDAO {
-    private final ApiService apiService;
+    private static ApiService apiService = null;
     public UserDAO(ApiService apiService) {
-        this.apiService = apiService;
+        UserDAO.apiService = apiService;
     }
-    public void login(String username, String password, final LoginCallback callback) {
+    public static void login(String username, String password, final LoginCallback callback) {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("username", username);
         credentials.put("password", password);
@@ -37,7 +37,7 @@ public class UserDAO {
             }
         });
     }
-    public void cadastro(User user, final CadastroCallback callback) {
+    public static void cadastro(User user, final CadastroCallback callback) {
         Call<Map<String, String>> call = apiService.cadastro(user);
         call.enqueue(new Callback<Map<String, String>>() {
             @Override

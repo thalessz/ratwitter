@@ -22,18 +22,18 @@
         app:layout_constraintVertical_bias="0.209" />
 
     <EditText
-        android:id="@+id/editTextName"
-        android:layout_width="329dp"
-        android:layout_height="47dp"
+        android:id="@+id/txtCadastroNome"
+        android:layout_width="335dp"
+        android:layout_height="45dp"
         android:layout_marginTop="140dp"
         android:hint="Nome"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.524"
+        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <EditText
-        android:id="@+id/editTextUsername"
+        android:id="@+id/txtCadastroUsername"
         android:layout_width="332dp"
         android:layout_height="46dp"
         android:layout_marginTop="8dp"
@@ -41,10 +41,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCadastroNome" />
 
     <Button
-        android:id="@+id/buttonSignupSubmit"
+        android:id="@+id/btnCadastrar"
         android:layout_width="333dp"
         android:layout_height="56dp"
         android:layout_marginTop="12dp"
@@ -52,10 +52,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCadastroEmail" />
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/txtCadastroEmail"
         android:layout_width="334dp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
@@ -63,10 +63,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCadastroSenha" />
 
     <EditText
-        android:id="@+id/editTextPassword"
+        android:id="@+id/txtCadastroSenha"
         android:layout_width="333dp"
         android:layout_height="47dp"
         android:layout_marginTop="12dp"
@@ -75,10 +75,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.525"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCadastroUsername" />
 
     <TextView
-        android:id="@+id/textViewLoginPrompt"
+        android:id="@+id/txtLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
@@ -86,6 +86,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSignupSubmit" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCadastrar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
