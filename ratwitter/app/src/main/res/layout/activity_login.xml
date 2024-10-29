@@ -15,7 +15,8 @@
         android:layout_marginStart="175dp"
         android:layout_marginTop="179dp"
         android:layout_marginEnd="176dp"
-        android:text="Login"
+        android:text="Ratwitter > Login
+"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,6 +30,8 @@
         android:layout_marginStart="55dp"
         android:layout_marginTop="54dp"
         android:hint="Usuário"
+        android:background="@drawable/fundo_texto"
+        android:textColor="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -37,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="84dp"
+
         android:layout_marginTop="16dp"
         android:text="Não tem uma conta? Cadastre-se aqui."
         app:layout_constraintStart_toStartOf="parent"
@@ -49,16 +53,21 @@
         android:layout_marginStart="55dp"
         android:layout_marginTop="39dp"
         android:hint="Senha"
+        android:background="@drawable/fundo_texto"
+        android:textColor="@android:color/darker_gray"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtUsuario" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_width="304dp"
         android:layout_height="53dp"
         android:layout_marginStart="55dp"
         android:layout_marginTop="44dp"
+        android:background="@drawable/fundo_botao"
+        android:textColor="@color/white"
+        android:fontFamily="@font/inter"
         android:text="Login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSenha" />
