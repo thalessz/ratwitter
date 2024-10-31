@@ -25,12 +25,12 @@
         android:id="@+id/txtCadastroNome"
         android:layout_width="335dp"
         android:layout_height="45dp"
-        android:layout_marginTop="140dp"
-        android:hint="Nome"
+        android:layout_marginTop="36dp"
         android:background="@drawable/fundo_texto"
+        android:hint="Nome"
         android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
@@ -40,10 +40,10 @@
         android:layout_height="46dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/fundo_texto"
-        android:textColor="@android:color/darker_gray"
         android:hint="Username"
+        android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtCadastroNome" />
 
@@ -77,13 +77,13 @@
         android:id="@+id/txtCadastroSenha"
         android:layout_width="333dp"
         android:layout_height="47dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/fundo_texto"
-        android:textColor="@android:color/darker_gray"
-        android:layout_marginTop="12dp"
         android:hint="Senha"
         android:inputType="textPassword"
+        android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintHorizontal_bias="0.448"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtCadastroUsername" />
 

@@ -28,4 +28,7 @@ public interface ApiService {
 
     @POST("/like_post/{post_id}")
     Call<Map<String, String>> likePost(@Path("post_id") int postId);
+
+    @GET("/fetch_user/{id}")
+    Call<User> fetchUser(@Path("id") int id);
 }

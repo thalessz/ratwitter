@@ -1,21 +1,20 @@
 package com.thalessz.ratwitter.models;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 public class Post implements Serializable {
     private int id;
     private String content;
-    private int userId;
-    private int likeCount;
-    private Timestamp createdAt;
+    private int user_id;
+    private int like_count;
+    private String created_at;
 
-    public Post(int id, String content, int userId, int likeCount, Timestamp createdAt) {
+    public Post(int id, String content, int user_id, int like_count, String createdAt) {
         this.id = id;
         this.content = content;
-        this.userId = userId;
-        this.likeCount = likeCount;
-        this.createdAt = createdAt;
+        this.user_id = user_id;
+        this.like_count = like_count;
+        this.created_at = createdAt;
     }
     public Post() {}
 
@@ -29,16 +28,16 @@ public class Post implements Serializable {
         return content;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public int getLikeCount() {
-        return likeCount;
+    public int getLike_count() {
+        return like_count;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
     // Setters
@@ -50,15 +49,15 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

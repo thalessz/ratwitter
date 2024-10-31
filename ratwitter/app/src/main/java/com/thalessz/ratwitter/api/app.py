@@ -160,5 +160,33 @@ def like_post(post_id):
         if conn:
             conn.close()
 
+@app.route('/fetch_user/<int:id>', methods=['GET'])
+def fetch_user(id):
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM USUARIO WHERE ID = %s LIMIT 1"
+        
+        # Execute a consulta, passando o ID como parâmetro
+        cursor.execute(query, (id,))
+        result = cursor.fetchone()
+        
+        if result is None:
+            return jsonify({'message': 'Usuário não encontrado'}), 404
+        
+        return jsonify(result), 200
+    except Exception as error:
+        return jsonify({'error': str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()  # Certifique-se de fechar a conexão
+
+            
+        
+        
 if __name__ == '__main__':
     app.run(debug=True)

@@ -66,6 +66,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcw_posts"
         android:layout_width="379dp"
         android:layout_height="665dp"
         android:layout_marginStart="14dp"
