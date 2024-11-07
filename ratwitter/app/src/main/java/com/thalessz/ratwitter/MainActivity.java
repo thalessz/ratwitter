@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private UserDAO userDAO;
     private EditText edtConteudo;
     private User user; // Mover a declaração para a classe
+    private boolean isLoading = false; // Para controlar o estado de carregamento
+    private int currentPage = 1; // Para controlar a página atual
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +82,25 @@ public class MainActivity extends AppCompatActivity {
 
         userDAO = new UserDAO(RetrofitClient.getApiService());
         postDAO = new PostDAO(RetrofitClient.getApiService());
-        fetchPosts();
+
+        fetchPosts(currentPage); // Carregar a primeira página
 
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
+
         btnRatear.setOnClickListener(v -> postarRateada());
+
+        // Listener para o NestedScrollView
+        findViewById(R.id.nested_scroll_view).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (!isLoading && (v.getChildAt(0).getBottom() <= (v.getHeight() + scrollY))) {
+                    // Carregar mais dados quando chegar ao final da lista
+                    currentPage++;
+                    fetchPosts(currentPage);
+                }
+            }
+        });
     }
 
     private void postarRateada() {
@@ -107,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Map<String, String> response) {
                         Toast.makeText(MainActivity.this, "Publicação adicionada com sucesso", Toast.LENGTH_SHORT).show();
-                        fetchPosts();
+                        fetchPosts(currentPage); // Atualiza a lista após adicionar um novo post
                     }
 
                     @Override
@@ -126,18 +143,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchPosts() {
+    private void fetchPosts(int page) {
+        isLoading = true; // Indica que estamos carregando dados
+
         postDAO.fetchPosts(new PostDAO.FetchPostsWithUsersCallback() {
             @Override
             public void onSuccess(List<PostUser> postsWithUsers) {
-                postUsers.clear();
-                postUsers.addAll(postsWithUsers);
-                postAdapter.notifyDataSetChanged();
+                if (page == 1) { // Se for a primeira página, limpa a lista existente
+                    postUsers.clear();
+                }
+                postUsers.addAll(postsWithUsers); // Adiciona os novos posts à lista existente
+                postAdapter.notifyDataSetChanged(); // Notifica o adaptador sobre as mudanças
+
+                isLoading = false; // Indica que o carregamento foi concluído
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 Log.e("tela dos posts", "Erro ao buscar posts: " + errorMessage);
+                isLoading = false; // Indica que houve uma falha no carregamento
             }
         });
     }
