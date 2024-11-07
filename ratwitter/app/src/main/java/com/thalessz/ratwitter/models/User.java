@@ -19,6 +19,11 @@ public class User implements Serializable {
     }
     // Getters
 
+
+    public int getId() {
+        return id;
+    }
+
     public String getNome() {
         return nome;
     }

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,27 +18,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.thalessz.ratwitter.dao.PostDAO;
+import com.thalessz.ratwitter.dao.UserDAO;
 import com.thalessz.ratwitter.models.PostUser;
 import com.thalessz.ratwitter.models.User;
-import com.thalessz.ratwitter.retrofit.ApiService; // Certifique-se de importar ApiService
 import com.thalessz.ratwitter.retrofit.RetrofitClient;
 import com.thalessz.ratwitter.utils.PostAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private List<PostUser> postUsers;
-    private PostDAO postDAO; // Adicione esta linha
+    private PostDAO postDAO;
+    private UserDAO userDAO;
+    private EditText edtConteudo;
+    private User user; // Mover a declaração para a classe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_main);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -49,12 +57,18 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
             finish();
-        }
+        } else {
+            String json = sharedPreferences.getString("user", null);
 
-        String json = sharedPreferences.getString("user", null);
-        if (json != null) {
-            User user = new Gson().fromJson(json, User.class);
-            // Você pode usar o objeto user aqui se necessário
+            if (json != null) {
+                user = new Gson().fromJson(json, User.class); // Atribuir diretamente à variável de instância
+            }
+
+            if (user != null) {
+                Toast.makeText(this, "Nome: " + user.getUsername(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show();
+            }
         }
 
         recyclerView = findViewById(R.id.rcw_posts);
@@ -63,9 +77,53 @@ public class MainActivity extends AppCompatActivity {
         postAdapter = new PostAdapter(postUsers);
         recyclerView.setAdapter(postAdapter);
 
-        // Inicialize o PostDAO passando a instância do ApiService
-        postDAO = new PostDAO(RetrofitClient.getApiService()); // Substitua por sua instância real do ApiService
+        userDAO = new UserDAO(RetrofitClient.getApiService());
+        postDAO = new PostDAO(RetrofitClient.getApiService());
         fetchPosts();
+
+        Button btnRatear = findViewById(R.id.btnRatear);
+        edtConteudo = findViewById(R.id.edtConteudo);
+        btnRatear.setOnClickListener(v -> postarRateada());
+    }
+
+    private void postarRateada() {
+        String content = edtConteudo.getText().toString();
+
+        // Verifica se o conteúdo não está vazio
+        if (content.isEmpty()) {
+            Toast.makeText(this, "Por favor, insira um conteúdo.", Toast.LENGTH_SHORT).show();
+            return; // Retorna se o conteúdo estiver vazio
+        }
+
+        // Chama a função para buscar o ID do usuário
+        UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
+            @Override
+            public Integer onSuccess(Integer userId) {
+                Map<String,String> postContent = new HashMap<>();
+                postContent.put("content", content);
+                postContent.put("user_id", String.valueOf(userId));
+
+                postDAO.addPost(postContent, new PostDAO.AddPostCallback() {
+                    @Override
+                    public void onSuccess(Map<String, String> response) {
+                        Toast.makeText(MainActivity.this, "Publicação adicionada com sucesso", Toast.LENGTH_SHORT).show();
+                        fetchPosts();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(MainActivity.this, "Algo errado aconteceu", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return userId;
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e("FetchID", "onFailure: deu pau tentando pegar o id " + errorMessage );
+                Toast.makeText(MainActivity.this, "Erro ao buscar ID do usuário.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchPosts() {
@@ -79,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.e("MainActivity", "Erro ao buscar posts: " + errorMessage);
+                Log.e("tela dos posts", "Erro ao buscar posts: " + errorMessage);
             }
         });
     }

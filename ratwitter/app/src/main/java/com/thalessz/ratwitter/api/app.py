@@ -185,7 +185,31 @@ def fetch_user(id):
         if conn:
             conn.close()  # Certifique-se de fechar a conexão
 
-            
+@app.route('/fetch_uid/<username>', methods=['GET'])
+
+def fetch_uid(username):
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT ID FROM USUARIO WHERE USERNAME = %s LIMIT 1"
+        
+        # Execute a consulta, passando o username como parâmetro
+        cursor.execute(query, (username,))
+        result = cursor.fetchone()
+        
+        if result is None:
+            return jsonify({'message': 'Usuário não encontrado'}), 404
+        
+        return jsonify({'user_id': result['ID']}), 200
+    except Exception as error:
+        return jsonify({'error': str(error)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()  # Certifique-se de fechar a conexão
         
         
 if __name__ == '__main__':

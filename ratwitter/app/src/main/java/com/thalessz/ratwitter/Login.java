@@ -51,13 +51,14 @@ public class Login extends AppCompatActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     Gson gson = new Gson();
+
                     String json = gson.toJson(user);
                     editor.putString("user", json);
                     editor.putBoolean("isLoggedIn", true);
                     editor.apply();
+
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
 

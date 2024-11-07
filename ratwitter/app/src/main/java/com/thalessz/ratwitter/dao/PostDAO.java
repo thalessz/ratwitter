@@ -69,8 +69,8 @@ public class PostDAO {
         });
     }
 
-    public void addPost(Post post, final AddPostCallback callback) {
-        Call<Map<String, String>> call = this.apiService.addPost(post);
+    public void addPost(Map<String, String> postData, final AddPostCallback callback) {
+        Call<Map<String, String>> call = this.apiService.addPost(postData);
         call.enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {

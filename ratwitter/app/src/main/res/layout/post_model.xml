@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_image">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="387dp"
-        android:layout_height="233dp"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
@@ -21,113 +22,106 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="5dp">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnLike"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/fundo_botao"
-                android:text="🖕"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tvwLikeCount"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
-                app:layout_constraintVertical_bias="0.0" />
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tvwNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter"
-                android:text="Edivaldo Serafim"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvwUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:fontFamily="sans-serif-light"
-                android:text="@string/str_username"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/tvwNome" />
-
-            <TextView
-                android:id="@+id/tvwPostContent"
-                android:layout_width="347dp"
-                android:layout_height="112dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="75dp"
-                android:layout_marginBottom="25dp"
-                android:fontFamily="@font/inter"
-                android:text="@string/lorem"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="32dp"
+                android:text="TextView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="43dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_image"
-                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/tvwPostContent"
+                app:layout_constraintEnd_toStartOf="@+id/tvwUsername"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:srcCompat="@drawable/rato" />
+
+            <TextView
+                android:id="@+id/tvwPostContent"
+                android:layout_width="361dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="68dp"
+                android:text="@string/lorem"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.615"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/divider"
-                android:layout_width="380dp"
+                android:layout_width="360dp"
                 android:layout_height="1dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="24dp"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toTopOf="@+id/btnLike"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvwDate" />
-
-            <TextView
-                android:id="@+id/tvwDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
-                android:text="12:16 AM  • 2024-10-24"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toTopOf="@+id/divider"
+                app:layout_constraintHorizontal_bias="0.457"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvwPostContent" />
 
             <TextView
                 android:id="@+id/tvwLikeCount"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="300dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/inter"
-                android:text="12 Curtidas"
+                android:layout_height="25dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+            <TextView
+                android:id="@+id/tvwDate"
+                android:layout_width="65dp"
+                android:layout_height="11dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="2dp"
+                android:text="19/04/2007 18:50"
                 android:textSize="8sp"
+                app:layout_constraintBottom_toTopOf="@+id/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvwPostContent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnLike"
+                android:layout_width="25dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/fundo_botao"
+                android:text="♡"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/divider"
                 app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

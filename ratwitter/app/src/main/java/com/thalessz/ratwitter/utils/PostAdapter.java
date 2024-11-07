@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.thalessz.ratwitter.R;
 import com.thalessz.ratwitter.models.PostUser;
 
 import java.util.List;
+import java.util.Locale;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private List<PostUser> postUsers;
@@ -34,11 +36,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostAdapter.PostViewHolder holder, int position) {
         PostUser postUser = postUsers.get(position);
         holder.tvwNome.setText(postUser.getUser().getNome());
-        holder.tvwUsername.setText(postUser.getUser().getUsername());
+        holder.tvwUsername.setText("@"+ postUser.getUser().getUsername().toLowerCase());
         holder.tvwPostContent.setText(postUser.getPost().getContent());
-        holder.tvwLikeCount.setText(String.valueOf(postUser.getPost().getCreated_at()));
+        holder.tvwLikeCount.setText(postUser.getPost().getLike_count() + " rateadas");
         holder.tvwDate.setText(formatDate(postUser.getPost().getCreated_at()));
-
+        holder.imageView.setImageResource(R.drawable.rato);
         holder.btnLike.setOnClickListener(v->likePost(postUser.getPost().getId()));
     }
 
@@ -54,6 +56,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public static class PostViewHolder extends RecyclerView.ViewHolder {
         TextView tvwNome, tvwUsername, tvwPostContent, tvwDate, tvwLikeCount;
         Button btnLike;
+        ImageView imageView;
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             tvwNome = itemView.findViewById(R.id.tvwNome);
@@ -62,6 +65,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             tvwDate = itemView.findViewById(R.id.tvwDate);
             tvwLikeCount = itemView.findViewById(R.id.tvwLikeCount);
             btnLike = itemView.findViewById(R.id.btnLike);
+            imageView = itemView.findViewById(R.id.imageView);
         }
 
     }

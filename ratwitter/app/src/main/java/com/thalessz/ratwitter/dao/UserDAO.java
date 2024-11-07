@@ -20,19 +20,31 @@ public class UserDAO {
         credentials.put("username", username);
         credentials.put("password", password);
 
-        Call<User> call = apiService.login(credentials);
-        call.enqueue(new Callback<User>() {
+        Call<Map<String, Object>> call = apiService.login(credentials);
+        call.enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    callback.onSuccess(response.body());
+                    // Extraindo os dados do response
+                    Map<String, Object> userData = response.body();
+
+                    // Construindo o objeto User
+                    String nome = (String) userData.get("NOME");
+                    String userUsername = (String) userData.get("USERNAME");
+                    String email = (String) userData.get("EMAIL");
+                    String password = (String) userData.get("PASSWORD"); // Se necessário
+
+                    User user = new User(nome, userUsername, email, password); // Construa o objeto User
+
+                    // Chamando o callback com o objeto User
+                    callback.onSuccess(user);
                 } else {
                     callback.onFailure("Login inválido");
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
                 callback.onFailure(t.getMessage());
             }
         });
@@ -55,12 +67,40 @@ public class UserDAO {
             }
         });
     }
+
+    public static int fetchUserId(String username, final FetchUserIdCallback callback) {
+        Call<Map<String, Integer>> call = apiService.fetchUserId(username);
+        call.enqueue(new Callback<Map<String, Integer>>() {
+            @Override
+            public void onResponse(Call<Map<String, Integer>> call, Response<Map<String, Integer>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Integer userId = response.body().get("user_id");
+                    callback.onSuccess(userId);
+                } else {
+                    callback.onFailure("Usuário não encontrado");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Integer>> call, Throwable t) {
+                callback.onFailure(t.getMessage());
+            }
+        });
+        return 0;
+    }
+
     public interface LoginCallback {
         void onSuccess(User user);
         void onFailure(String errorMessage);
     }
+
     public interface CadastroCallback {
         void onSuccess(Map<String, String> response);
+        void onFailure(String errorMessage);
+    }
+
+    public interface FetchUserIdCallback {
+        Integer onSuccess(Integer userId);
         void onFailure(String errorMessage);
     }
 }

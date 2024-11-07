@@ -7,8 +7,11 @@ import java.util.TimeZone;
 
 public class DateFormatter {
     public static String formatDate(String inputDate) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        // Formato de entrada atualizado
+        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        // Formato de saída
         SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a  •  yyyy-MM-dd");
 
         try {

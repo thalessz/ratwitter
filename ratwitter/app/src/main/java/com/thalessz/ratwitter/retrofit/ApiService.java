@@ -15,7 +15,7 @@ import java.util.Map;
 public interface ApiService {
 
     @POST("/login")
-    Call<User> login(@Body Map<String, String> credentials);
+    Call<Map<String, Object>> login(@Body Map<String, String> credentials);
 
     @POST("/cadastro")
     Call<Map<String, String>> cadastro(@Body User userDetails);
@@ -24,11 +24,15 @@ public interface ApiService {
     Call<List<Post>> fetchPosts();
 
     @POST("/add_post")
-    Call<Map<String, String>> addPost(@Body Post postDetails);
+    Call<Map<String, String>> addPost(@Body Map<String, String> postDetails);
 
     @POST("/like_post/{post_id}")
     Call<Map<String, String>> likePost(@Path("post_id") int postId);
 
     @GET("/fetch_user/{id}")
     Call<User> fetchUser(@Path("id") int id);
+
+    @GET("/fetch_uid/{username}")
+    Call<Map<String, Integer>> fetchUserId(@Path("username") String username);
+
 }
