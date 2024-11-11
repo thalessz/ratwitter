@@ -90,20 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnRatear.setOnClickListener(v -> postarRateada());
 
-        // Listener para o NestedScrollView
-        findViewById(R.id.nested_scroll_view).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (!isLoading && (v.getChildAt(0).getBottom() <= (v.getHeight() + scrollY))) {
-                    // Carregar mais dados quando chegar ao final da lista
-                    currentPage++;
-                    fetchPosts(currentPage);
-                }
-            }
-        });
-    }
-
-    private void postarRateada() {
+        private void postarRateada() {
         String content = edtConteudo.getText().toString();
 
         // Verifica se o conteúdo não está vazio
