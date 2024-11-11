@@ -96,9 +96,14 @@ public class MainActivity extends AppCompatActivity {
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
         btnRatear.setOnClickListener(v -> postarRateada());
+<<<<<<< HEAD
     }
 
     private void postarRateada() {
+=======
+
+        private void postarRateada() {
+>>>>>>> 2b61484b70bb582e863b2145bf23ea7fc434711a
         String content = edtConteudo.getText().toString();
 
         if (content.isEmpty()) {
