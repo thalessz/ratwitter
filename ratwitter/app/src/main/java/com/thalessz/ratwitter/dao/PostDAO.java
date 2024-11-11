@@ -88,8 +88,9 @@ public class PostDAO {
         });
     }
 
-    public void likePost(int postId, final LikePostCallback callback) {
-        Call<Map<String, String>> call = this.apiService.likePost(postId);
+    // Método para curtir um post
+    public void likePost(int postId, Map<String, Integer> userIdMap, final LikePostCallback callback) {
+        Call<Map<String, String>> call = this.apiService.likePost(postId, userIdMap);
         call.enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
@@ -103,6 +104,48 @@ public class PostDAO {
             @Override
             public void onFailure(Call<Map<String, String>> call, Throwable t) {
                 callback.onFailure("Erro ao curtir post: " + t.getMessage());
+            }
+        });
+    }
+
+    // Método para descurtir um post
+    public void unlikePost(int postId, int userId, final LikePostCallback callback) {
+        Call<Map<String, String>> call = this.apiService.unlikePost(postId, userId);
+        call.enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure("Falha ao descurtir post: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                callback.onFailure("Erro ao descurtir post: " + t.getMessage());
+            }
+        });
+    }
+
+    // Novo método para verificar se o post foi curtido pelo usuário
+    public void checkIfLiked(int postId, int userId, final CheckLikeCallback callback) {
+        Call<Map<String, Boolean>> call = this.apiService.checkIfLiked(postId, userId);
+        call.enqueue(new Callback<Map<String, Boolean>>() {
+            @Override
+            public void onResponse(Call<Map<String, Boolean>> call, Response<Map<String, Boolean>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Extraindo o valor booleano da resposta
+                    Boolean isLiked = response.body().get("is_liked");
+                    callback.onSuccess(isLiked);
+                } else {
+                    callback.onFailure("Falha ao verificar curtida: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Boolean>> call, Throwable t) {
+                callback.onFailure("Erro ao verificar curtida: " + t.getMessage());
             }
         });
     }
@@ -122,4 +165,11 @@ public class PostDAO {
         void onSuccess(Map<String, String> response);
         void onFailure(String errorMessage);
     }
+
+    // Nova interface de callback para verificar likes
+    public interface CheckLikeCallback {
+        void onSuccess(Boolean isLiked);
+        void onFailure(String errorMessage);
+    }
+
 }

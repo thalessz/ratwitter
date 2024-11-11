@@ -46,4 +46,5 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
+    implementation(libs.swipeRefreshLayout)
 }

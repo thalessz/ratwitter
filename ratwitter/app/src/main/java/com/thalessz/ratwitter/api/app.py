@@ -75,6 +75,7 @@ def cadastro():
 
 @app.route('/fetch_posts', methods=['GET'])
 def fetch_posts():
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -82,7 +83,7 @@ def fetch_posts():
         query = '''
             SELECT id, content, user_id, created_at 
             FROM posts 
-            ORDER BY created_at DESC;
+            ORDER BY RAND();
         '''
         cursor.execute(query)
         result = cursor.fetchall()
@@ -138,18 +139,48 @@ def add_post():
 
 @app.route('/like_post/<int:post_id>', methods=['POST'])
 def like_post(post_id):
+    user_id = request.json.get('user_id')  # Supondo que o ID do usuário é enviado no corpo da requisição
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = "UPDATE posts SET like_count = like_count + 1 WHERE id = %s"
-        cursor.execute(query, (post_id,))
+        # Adiciona uma nova curtida
+        query = "INSERT INTO likes (user_id, post_id) VALUES (%s, %s)"
+        cursor.execute(query, (user_id, post_id))
 
-        if cursor.rowcount == 0:
-            return jsonify({'message': 'Post não encontrado'}), 404
-
+        # Atualiza a contagem de likes no post
+        update_query = "UPDATE posts SET like_count = like_count + 1 WHERE id = %s"
+        cursor.execute(update_query, (post_id,))
+        
         conn.commit()
         return jsonify({'message': 'Post curtido com sucesso'}), 200
+
+    except mysql.Error as error:
+        return jsonify({'error': str(error)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/unlike_post/<int:post_id>', methods=['DELETE'])
+def unlike_post(post_id):
+    user_id = request.json.get('user_id')  # Supondo que o ID do usuário é enviado no corpo da requisição
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Remove a curtida
+        query = "DELETE FROM likes WHERE user_id = %s AND post_id = %s"
+        cursor.execute(query, (user_id, post_id))
+
+        # Atualiza a contagem de likes no post
+        update_query = "UPDATE posts SET like_count = like_count - 1 WHERE id = %s"
+        cursor.execute(update_query, (post_id,))
+        
+        conn.commit()
+        return jsonify({'message': 'Curtida removida com sucesso'}), 200
 
     except mysql.Error as error:
         return jsonify({'error': str(error)}), 500
@@ -210,7 +241,32 @@ def fetch_uid(username):
             cursor.close()
         if conn:
             conn.close()  # Certifique-se de fechar a conexão
+    
+@app.route('/check_if_liked/<int:post_id>', methods=['GET'])
+def check_if_liked(post_id):
+    user_id = request.args.get('user_id')  # Supondo que o ID do usuário é passado como parâmetro na URL
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        query = "SELECT COUNT(*) FROM likes WHERE user_id = %s AND post_id = %s"
+        cursor.execute(query, (user_id, post_id))
         
+        result = cursor.fetchone()
         
+        is_liked = result[0] > 0  # Retorna True se o usuário já curtiu o post
+
+        return jsonify(is_liked=is_liked), 200  # Retorna apenas o booleano
+
+    except mysql.Error as error:
+        return jsonify({'error': str(error)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
 if __name__ == '__main__':
     app.run(debug=True)

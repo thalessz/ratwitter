@@ -3,9 +3,12 @@ package com.thalessz.ratwitter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,9 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.thalessz.ratwitter.dao.PostDAO;
@@ -37,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private PostDAO postDAO;
     private UserDAO userDAO;
     private EditText edtConteudo;
-    private User user; // Mover a declaração para a classe
-    private boolean isLoading = false; // Para controlar o estado de carregamento
-    private int currentPage = 1; // Para controlar a página atual
+    private User user;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             String json = sharedPreferences.getString("user", null);
 
             if (json != null) {
-                user = new Gson().fromJson(json, User.class); // Atribuir diretamente à variável de instância
+                user = new Gson().fromJson(json, User.class);
             }
 
             if (user != null) {
@@ -77,42 +80,32 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rcw_posts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         postUsers = new ArrayList<>();
-        postAdapter = new PostAdapter(postUsers);
+        postAdapter = new PostAdapter(postUsers, user.getId());
         recyclerView.setAdapter(postAdapter);
 
         userDAO = new UserDAO(RetrofitClient.getApiService());
         postDAO = new PostDAO(RetrofitClient.getApiService());
 
-        fetchPosts(currentPage); // Carregar a primeira página
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        progressBar = findViewById(R.id.progressBar);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> fetchPosts());
+
+        fetchPosts();
 
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
-
         btnRatear.setOnClickListener(v -> postarRateada());
-
-        // Listener para o NestedScrollView
-        findViewById(R.id.nested_scroll_view).setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (!isLoading && (v.getChildAt(0).getBottom() <= (v.getHeight() + scrollY))) {
-                    // Carregar mais dados quando chegar ao final da lista
-                    currentPage++;
-                    fetchPosts(currentPage);
-                }
-            }
-        });
     }
 
     private void postarRateada() {
         String content = edtConteudo.getText().toString();
 
-        // Verifica se o conteúdo não está vazio
         if (content.isEmpty()) {
             Toast.makeText(this, "Por favor, insira um conteúdo.", Toast.LENGTH_SHORT).show();
-            return; // Retorna se o conteúdo estiver vazio
+            return;
         }
 
-        // Chama a função para buscar o ID do usuário
         UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
             @Override
             public Integer onSuccess(Integer userId) {
@@ -123,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 postDAO.addPost(postContent, new PostDAO.AddPostCallback() {
                     @Override
                     public void onSuccess(Map<String, String> response) {
+                        edtConteudo.setText("");
                         Toast.makeText(MainActivity.this, "Publicação adicionada com sucesso", Toast.LENGTH_SHORT).show();
-                        fetchPosts(currentPage); // Atualiza a lista após adicionar um novo post
+                        fetchPosts();
                     }
 
                     @Override
@@ -143,25 +137,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchPosts(int page) {
-        isLoading = true; // Indica que estamos carregando dados
+    private void fetchPosts() {
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
 
         postDAO.fetchPosts(new PostDAO.FetchPostsWithUsersCallback() {
             @Override
             public void onSuccess(List<PostUser> postsWithUsers) {
-                if (page == 1) { // Se for a primeira página, limpa a lista existente
-                    postUsers.clear();
-                }
-                postUsers.addAll(postsWithUsers); // Adiciona os novos posts à lista existente
-                postAdapter.notifyDataSetChanged(); // Notifica o adaptador sobre as mudanças
+                postUsers.clear();
+                postUsers.addAll(postsWithUsers);
+                postAdapter.notifyDataSetChanged();
 
-                isLoading = false; // Indica que o carregamento foi concluído
+                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 Log.e("tela dos posts", "Erro ao buscar posts: " + errorMessage);
-                isLoading = false; // Indica que houve uma falha no carregamento
+
+                progressBar.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+
+                Toast.makeText(MainActivity.this, "Erro ao carregar posts.", Toast.LENGTH_SHORT).show();
             }
         });
     }

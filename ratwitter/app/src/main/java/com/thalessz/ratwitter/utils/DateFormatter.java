@@ -12,7 +12,7 @@ public class DateFormatter {
         inputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         // Formato de saída
-        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a  •  yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a yyyy-MM-dd");
 
         try {
             Date date = inputFormat.parse(inputDate);
