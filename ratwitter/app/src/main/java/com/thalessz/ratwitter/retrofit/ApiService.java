@@ -16,31 +16,31 @@ import java.util.Map;
 
 public interface ApiService {
 
-    @POST("/login")
+    @POST("/users/login")
     Call<Map<String, Object>> login(@Body Map<String, String> credentials);
 
-    @POST("/cadastro")
+    @POST("/users/cadastro")
     Call<Map<String, String>> cadastro(@Body User userDetails);
 
-    @GET("/fetch_posts")
+    @GET("/posts/fetch_posts")
     Call<List<Post>> fetchPosts();
 
-    @POST("/add_post")
+    @POST("/posts/add_post")
     Call<Map<String, String>> addPost(@Body Map<String, String> postDetails);
 
-    @POST("/like_post/{post_id}")
+    @POST("/posts/like_post/{post_id}")
     Call<Map<String, String>> likePost(@Path("post_id") int postId, @Body Map<String, Integer> userId);
 
-    @DELETE("/unlike_post/{post_id}")
+    @DELETE("/posts/unlike_post/{post_id}")
     Call<Map<String, String>> unlikePost(@Path("post_id") int postId, @Query("user_id") int userId);
 
-    @GET("/check_if_liked/{post_id}")
+    @GET("/posts/check_if_liked/{post_id}")
     Call<Map<String, Boolean>> checkIfLiked(@Path("post_id") int postId, @Query("user_id") int userId);
 
-    @GET("/fetch_user/{id}")
+    @GET("/users/fetch_user/{id}")
     Call<User> fetchUser(@Path("id") int id);
 
-    @GET("/fetch_uid/{username}")
+    @GET("/users/fetch_uid/{username}")
     Call<Map<String, Integer>> fetchUserId(@Path("username") String username);
 
 }

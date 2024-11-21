@@ -3,7 +3,6 @@ package com.thalessz.ratwitter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +35,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
-    private List<PostUser> postUsers;
+    private List<PostUser> postUsers = new ArrayList<>();
     private PostDAO postDAO;
     private UserDAO userDAO;
     private EditText edtConteudo;
@@ -50,61 +49,74 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setupWindowInsets();
 
         SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
         if (!isLoggedIn) {
-            Intent intent = new Intent(MainActivity.this, Login.class);
-            startActivity(intent);
-            finish();
-        } else {
-            String json = sharedPreferences.getString("user", null);
-
-            if (json != null) {
-                user = new Gson().fromJson(json, User.class);
-            }
-
-            if (user != null) {
-                Toast.makeText(this, "Nome: " + user.getUsername(), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show();
-            }
+            navigateToLogin();
+            return; // Saia do método se não estiver logado
         }
 
-        recyclerView = findViewById(R.id.rcw_posts);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        postUsers = new ArrayList<>();
-        postAdapter = new PostAdapter(postUsers, user.getId());
-        recyclerView.setAdapter(postAdapter);
+        user = getUserFromPreferences(sharedPreferences);
+        if (user != null) {
+            Toast.makeText(this, "Nome: " + user.getUsername(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show();
+        }
 
-        userDAO = new UserDAO(RetrofitClient.getApiService());
-        postDAO = new PostDAO(RetrofitClient.getApiService());
-
-        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        progressBar = findViewById(R.id.progressBar);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> fetchPosts());
-
-        fetchPosts();
+        initializeViews();
+        setupRecyclerView();
+        setupSwipeRefresh();
 
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
         btnRatear.setOnClickListener(v -> postarRateada());
-<<<<<<< HEAD
+    }
+
+    private void setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private User getUserFromPreferences(SharedPreferences sharedPreferences) {
+        String json = sharedPreferences.getString("user", null);
+        return json != null ? new Gson().fromJson(json, User.class) : null;
+    }
+
+    private void initializeViews() {
+        recyclerView = findViewById(R.id.rcw_posts);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        progressBar = findViewById(R.id.progressBar);
+
+        userDAO = new UserDAO(RetrofitClient.getApiService());
+        postDAO = new PostDAO(RetrofitClient.getApiService());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        postAdapter = new PostAdapter(postUsers, user.getId());
+        recyclerView.setAdapter(postAdapter);
+
+        fetchPosts(); // Carregar posts ao iniciar
+    }
+
+    private void setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(this::fetchPosts);
     }
 
     private void postarRateada() {
-=======
-
-        private void postarRateada() {
->>>>>>> 2b61484b70bb582e863b2145bf23ea7fc434711a
-        String content = edtConteudo.getText().toString();
+        String content = edtConteudo.getText().toString().trim();
 
         if (content.isEmpty()) {
             Toast.makeText(this, "Por favor, insira um conteúdo.", Toast.LENGTH_SHORT).show();
@@ -114,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
             @Override
             public Integer onSuccess(Integer userId) {
-                Map<String,String> postContent = new HashMap<>();
+                Map<String, String> postContent = new HashMap<>();
                 postContent.put("content", content);
                 postContent.put("user_id", String.valueOf(userId));
 
@@ -131,12 +143,12 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Algo errado aconteceu", Toast.LENGTH_SHORT).show();
                     }
                 });
-                return userId;
+                return userId; // Retornar ID do usuário
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.e("FetchID", "onFailure: deu pau tentando pegar o id " + errorMessage );
+                Log.e("FetchID", "Erro ao buscar ID do usuário: " + errorMessage);
                 Toast.makeText(MainActivity.this, "Erro ao buscar ID do usuário.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -161,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.e("tela dos posts", "Erro ao buscar posts: " + errorMessage);
+                Log.e("FetchPosts", "Erro ao buscar posts: " + errorMessage);
 
                 progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
