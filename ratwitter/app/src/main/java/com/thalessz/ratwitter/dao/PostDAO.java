@@ -136,7 +136,7 @@ public class PostDAO {
             public void onResponse(Call<Map<String, Boolean>> call, Response<Map<String, Boolean>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     // Extraindo o valor booleano da resposta
-                    Boolean isLiked = response.body().get("is_liked");
+                    Boolean isLiked = response.body().get("liked");
                     callback.onSuccess(isLiked);
                 } else {
                     callback.onFailure("Falha ao verificar curtida: " + response.message());

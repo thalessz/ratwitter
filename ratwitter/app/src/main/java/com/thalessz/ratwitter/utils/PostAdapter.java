@@ -63,8 +63,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         // Configura o click listener para curtir/descurtir
         holder.btnLike.setOnClickListener(v -> {
             if (holder.btnLike.getText().equals("Curtir")) {
+                Log.e("likePost", postUser.getPost().getId() + " " + currentUID);
                 likePost(postUser.getPost().getId(), holder, postUser);
             } else {
+                Log.e("unlike", postUser.getPost().getId() + " " + currentUID);
                 unlikePost(postUser.getPost().getId(), holder, postUser);
             }
         });
@@ -75,7 +77,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void onSuccess(Boolean isLiked) {
                 // Atualiza o texto do botão com base na verificação
-                holder.btnLike.setText(isLiked ? "♥" : "♡");
+                holder.btnLike.setText(isLiked ? "♡" : "♥");
             }
 
             @Override
@@ -97,7 +99,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 // Atualiza a contagem de likes
                 int newLikeCount = postUser.getPost().getLike_count() + 1; // Aumenta a contagem
                 holder.tvwLikeCount.setText(newLikeCount + " rateadas");
-                holder.btnLike.setText("Descurtir"); // Atualiza o texto do botão
+                holder.btnLike.setText("♥");
                 postUser.getPost().setLike_count(newLikeCount); // Atualiza o modelo de dados
             }
 
@@ -116,7 +118,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 // Atualiza a contagem de likes
                 int newLikeCount = postUser.getPost().getLike_count() - 1; // Diminui a contagem
                 holder.tvwLikeCount.setText(newLikeCount + " rateadas");
-                holder.btnLike.setText("Curtir"); // Atualiza o texto do botão
+                holder.btnLike.setText("♡");
                 postUser.getPost().setLike_count(newLikeCount); // Atualiza o modelo de dados
             }
 

@@ -105,10 +105,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        postAdapter = new PostAdapter(postUsers, user.getId());
+        int uid = fetchUid();
+        postAdapter = new PostAdapter(postUsers, uid);
         recyclerView.setAdapter(postAdapter);
 
         fetchPosts(); // Carregar posts ao iniciar
+    }
+
+    private int fetchUid() {
+        UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
+            @Override
+            public Integer onSuccess(Integer userId) {
+                return userId;
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(MainActivity.this, "errorMessage", Toast.LENGTH_SHORT).show();
+                Log.e("erro", errorMessage);
+            }
+        });
+        return 0;
     }
 
     private void setupSwipeRefresh() {
@@ -140,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        Toast.makeText(MainActivity.this, "Algo errado aconteceu", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
                 return userId; // Retornar ID do usuário
