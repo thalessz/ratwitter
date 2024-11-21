@@ -40,3 +40,18 @@ exports.unlikePost=(req,res)=>{
        return res.status(200).json({message:'Curtida removida com sucesso'});
     })
  }
+
+ exports.check_if_liked=(req,res)=>{
+    const PostId = req.params.post_id;
+    const {user_id}= req.body;
+
+    Post.check_if_liked(user_id,PostId, (err, result)=>{
+        const response = [
+            {
+                liked: result
+            }
+        ]
+        if(err) return res.status(500).json({message:err.message});
+        return res.status(200).json(response);
+    })
+ }

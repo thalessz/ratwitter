@@ -17,6 +17,10 @@ const Post = {
     unlikePost: (postId, userId, callback) => {
         const query = "DELETE FROM likes WHERE user_id = ? AND post_id = ?";
         db.query(query, [userId, postId], callback);
+    },
+    check_if_liked: (postId, userId, callback) => {
+        const query = "SELECT EXISTS (SELECT 1 FROM LIKES WHERE USER_ID = ? AND POST_ID = ?) AS is_liked";
+        db.query(query, [userId, postId], callback);
     }
 };
 
