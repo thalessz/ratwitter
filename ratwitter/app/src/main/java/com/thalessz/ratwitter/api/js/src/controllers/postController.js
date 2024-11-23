@@ -10,6 +10,18 @@ exports.fetchPosts = (req,res)=>{
     });
 };
 
+exports.fetchPostByUid = (req,res) =>{
+    const uid = req.params.uid;
+    if(!uid)
+        return res.status(400).json({message:'uid obrigatório'})
+    
+    Post.fetch_by_uid(uid, (err,result)=>{
+        if(err)return res.status(500).json({error:err.message});
+        if(!result.length)return res.status(200).json({message:'Nenhum post encontrado'});
+        return res.status(200).json(result)
+    });
+}
+
 exports.addPost=(req,res)=>{
     const {content,user_id}=req.body;
     

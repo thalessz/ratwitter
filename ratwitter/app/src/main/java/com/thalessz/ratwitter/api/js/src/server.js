@@ -9,7 +9,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/users', userRoutes);app.use('/users',userRoutes); 
+app.use('/users', userRoutes);
 app.use('/posts',postRoutes); 
 
 const port=process.env.PORT||5000;
