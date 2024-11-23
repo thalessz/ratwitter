@@ -4,7 +4,7 @@ const db = require('../config/db');
 // meu deus do céu, programação orientada a objetos dentro do javaScript. alguém me mata.
 const User = {
     login: (username, password, callback) => {
-        const query = "SELECT nome,username,email FROM usuario WHERE username = ? AND password = ?";
+        const query = "SELECT nome,username,password,email FROM usuario WHERE username = ? AND password = ?";
         db.query(query, [username,password], callback);
     },
     create: (userData,callback) =>{

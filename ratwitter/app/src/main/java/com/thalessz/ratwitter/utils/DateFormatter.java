@@ -7,19 +7,20 @@ import java.util.TimeZone;
 
 public class DateFormatter {
     public static String formatDate(String inputDate) {
-        // Formato de entrada atualizado
-        SimpleDateFormat inputFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        inputFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        // Formato de entrada atualizado para ISO 8601
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Define o fuso horário como UTC
 
         // Formato de saída
         SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a yyyy-MM-dd");
+        outputFormat.setTimeZone(TimeZone.getDefault()); // Define o fuso horário de saída como o padrão do sistema
 
         try {
-            Date date = inputFormat.parse(inputDate);
-            return outputFormat.format(date);
+            Date date = inputFormat.parse(inputDate); // Converte a string de entrada em um objeto Date
+            return outputFormat.format(date); // Formata e retorna a data no formato desejado
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
+            return null; // Retorna null em caso de erro
         }
     }
 }

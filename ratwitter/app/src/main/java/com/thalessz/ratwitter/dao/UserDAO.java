@@ -15,6 +15,7 @@ public class UserDAO {
     public UserDAO(ApiService apiService) {
         UserDAO.apiService = apiService;
     }
+
     public static void login(String username, String password, final LoginCallback callback) {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("username", username);
@@ -29,12 +30,13 @@ public class UserDAO {
                     Map<String, Object> userData = response.body();
 
                     // Construindo o objeto User
-                    String nome = (String) userData.get("NOME");
-                    String userUsername = (String) userData.get("USERNAME");
-                    String email = (String) userData.get("EMAIL");
-                    String password = (String) userData.get("PASSWORD"); // Se necessário
+                    String nome = (String) userData.get("nome");
+                    String userUsername = (String) userData.get("username");
+                    String password = (String) userData.get("password");
+                    String email = (String) userData.get("email");
+                   // Se necessário
 
-                    User user = new User(nome, userUsername, email, password); // Construa o objeto User
+                    User user = new User(nome, userUsername, password, email ); // Construa o objeto User
 
                     // Chamando o callback com o objeto User
                     callback.onSuccess(user);
@@ -100,7 +102,7 @@ public class UserDAO {
     }
 
     public interface FetchUserIdCallback {
-        Integer onSuccess(Integer userId);
+        void onSuccess(Integer userId);
         void onFailure(String errorMessage);
     }
 }

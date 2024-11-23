@@ -35,7 +35,7 @@ public interface ApiService {
     Call<Map<String, String>> unlikePost(@Path("post_id") int postId, @Query("user_id") int userId);
 
     @GET("/posts/check_if_liked/{post_id}")
-    Call<Map<String, Boolean>> checkIfLiked(@Path("post_id") int postId, @Query("user_id") int userId);
+    Call<List<Map<String, Integer>>> checkIfLiked(@Path("post_id") int postId, @Query("user_id") int userId);
 
     @GET("/users/fetch_user/{id}")
     Call<User> fetchUser(@Path("id") int id);

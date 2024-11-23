@@ -3,11 +3,11 @@ const db = require('../config/db');
 
 const Post = {
     fetchAll: (callback) => {
-        const query = "SELECT id,content,user_id, created_at FROM posts ORDER BY RAND()"
+        const query = "SELECT id,content,user_id, created_at, like_count FROM posts ORDER BY RAND()"
         db.query(query, callback);
     },
     addPost: (postData, callback)=>{
-        const query="INSERT INTO posts (contnet,user_id) VALUES (?,?)";
+        const query="INSERT INTO posts (content,user_id) VALUES (?,?)";
         db.query(query,[postData.content, postData.user_id], callback);
     },
     likePost: (postId, userId, callback) => {
@@ -19,7 +19,7 @@ const Post = {
         db.query(query, [userId, postId], callback);
     },
     check_if_liked: (postId, userId, callback) => {
-        const query = "SELECT EXISTS (SELECT 1 FROM LIKES WHERE USER_ID = ? AND POST_ID = ?) AS is_liked";
+        const query = "SELECT EXISTS (SELECT 1 FROM likes WHERE user_id = ? AND post_id = ?) AS is_liked";
         db.query(query, [userId, postId], callback);
     }
 };

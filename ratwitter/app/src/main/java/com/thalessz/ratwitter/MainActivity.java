@@ -105,27 +105,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        int uid = fetchUid();
-        postAdapter = new PostAdapter(postUsers, uid);
-        recyclerView.setAdapter(postAdapter);
-
-        fetchPosts(); // Carregar posts ao iniciar
+        fetchUid(); // Chama fetchUid para buscar e passar o UID ao adapter
     }
 
-    private int fetchUid() {
+    private void fetchUid() {
         UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
             @Override
-            public Integer onSuccess(Integer userId) {
-                return userId;
+            public void onSuccess(Integer userId) {
+                // Atualiza o adapter com o UID obtido
+                postAdapter = new PostAdapter(postUsers, userId);
+                recyclerView.setAdapter(postAdapter);
+                fetchPosts(); // Carregar posts após configurar o adapter
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Toast.makeText(MainActivity.this, "errorMessage", Toast.LENGTH_SHORT).show();
-                Log.e("erro", errorMessage);
+                Toast.makeText(MainActivity.this, "Erro ao buscar ID do usuário: " + errorMessage, Toast.LENGTH_SHORT).show();
+                Log.e("FetchID", errorMessage);
             }
         });
-        return 0;
     }
 
     private void setupSwipeRefresh() {
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         UserDAO.fetchUserId(user.getUsername(), new UserDAO.FetchUserIdCallback() {
             @Override
-            public Integer onSuccess(Integer userId) {
+            public void onSuccess(Integer userId) {
                 Map<String, String> postContent = new HashMap<>();
                 postContent.put("content", content);
                 postContent.put("user_id", String.valueOf(userId));
@@ -160,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
-                return userId; // Retornar ID do usuário
             }
 
             @Override

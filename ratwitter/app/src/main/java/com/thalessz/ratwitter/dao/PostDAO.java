@@ -1,5 +1,7 @@
 package com.thalessz.ratwitter.dao;
 
+import android.util.Log;
+
 import com.thalessz.ratwitter.models.Post;
 import com.thalessz.ratwitter.models.User;
 import com.thalessz.ratwitter.models.PostUser;
@@ -117,12 +119,15 @@ public class PostDAO {
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onSuccess(response.body());
                 } else {
+                    // Log da resposta para depuração
+                    Log.e("unlikePost", "Falha ao descurtir post: " + response.message());
                     callback.onFailure("Falha ao descurtir post: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                Log.e("unlikePost", "Erro ao descurtir post: " + t.getMessage());
                 callback.onFailure("Erro ao descurtir post: " + t.getMessage());
             }
         });
@@ -130,13 +135,14 @@ public class PostDAO {
 
     // Novo método para verificar se o post foi curtido pelo usuário
     public void checkIfLiked(int postId, int userId, final CheckLikeCallback callback) {
-        Call<Map<String, Boolean>> call = this.apiService.checkIfLiked(postId, userId);
-        call.enqueue(new Callback<Map<String, Boolean>>() {
+        Call<List<Map<String, Integer>>> call = this.apiService.checkIfLiked(postId, userId);
+        call.enqueue(new Callback<List<Map<String, Integer>>>() {
             @Override
-            public void onResponse(Call<Map<String, Boolean>> call, Response<Map<String, Boolean>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Extraindo o valor booleano da resposta
-                    Boolean isLiked = response.body().get("liked");
+            public void onResponse(Call<List<Map<String, Integer>>> call, Response<List<Map<String, Integer>>> response) {
+                if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                    // Extraindo o valor "is_liked" da resposta
+                    Integer isLikedValue = response.body().get(0).get("is_liked");
+                    Boolean isLiked = (isLikedValue != null && isLikedValue == 1);
                     callback.onSuccess(isLiked);
                 } else {
                     callback.onFailure("Falha ao verificar curtida: " + response.message());
@@ -144,7 +150,7 @@ public class PostDAO {
             }
 
             @Override
-            public void onFailure(Call<Map<String, Boolean>> call, Throwable t) {
+            public void onFailure(Call<List<Map<String, Integer>>> call, Throwable t) {
                 callback.onFailure("Erro ao verificar curtida: " + t.getMessage());
             }
         });
