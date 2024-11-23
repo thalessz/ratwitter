@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/tvwDate"
-                android:layout_width="65dp"
+                android:layout_width="wrap_content"
                 android:layout_height="11dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="2dp"

@@ -71,6 +71,55 @@ public class PostDAO {
         });
     }
 
+    public void fetchPostsByUid(int uid, final FetchByUidCallback callback) {
+        Call<List<Post>> call = this.apiService.fetchPostByUid(uid);
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Post> posts = response.body();
+                    List<PostUser> postUsers = new ArrayList<>();
+                    List<Call<User>> userCalls = new ArrayList<>();
+
+                    for (Post post : posts) {
+                        Call<User> userCall = apiService.fetchUser(post.getUser_id());
+                        userCalls.add(userCall);
+
+                        userCall.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> userResponse) {
+                                if (userResponse.isSuccessful() && userResponse.body() != null) {
+                                    User user = userResponse.body();
+                                    postUsers.add(new PostUser(post, user));
+                                } else {
+                                    // Adiciona uma mensagem de erro se o usuário não for encontrado
+                                    callback.onFailure("Falha ao buscar usuário para o post ID: " + post.getId());
+                                }
+
+                                // Verifica se todos os usuários foram carregados
+                                if (postUsers.size() + 1 == posts.size()) { // +1 para incluir falhas de usuários
+                                    callback.onSuccess(postUsers);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                callback.onFailure("Erro ao buscar usuário: " + t.getMessage());
+                            }
+                        });
+                    }
+                } else {
+                    callback.onFailure("Falha ao buscar posts: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                callback.onFailure("Erro ao buscar posts: " + t.getMessage());
+            }
+        });
+    }
+
     public void addPost(Map<String, String> postData, final AddPostCallback callback) {
         Call<Map<String, String>> call = this.apiService.addPost(postData);
         call.enqueue(new Callback<Map<String, String>>() {
@@ -175,6 +224,11 @@ public class PostDAO {
     // Nova interface de callback para verificar likes
     public interface CheckLikeCallback {
         void onSuccess(Boolean isLiked);
+        void onFailure(String errorMessage);
+    }
+
+    public interface FetchByUidCallback {
+        void onSuccess(List<PostUser> postWithUsers);
         void onFailure(String errorMessage);
     }
 

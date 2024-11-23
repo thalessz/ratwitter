@@ -25,6 +25,9 @@ public interface ApiService {
     @GET("/posts/fetch_posts")
     Call<List<Post>> fetchPosts();
 
+    @GET("/posts/fetch_by_uid/{uid}")
+    Call<List<Post>> fetchPostByUid(@Path("uid") int uid);
+
     @POST("/posts/add_post")
     Call<Map<String, String>> addPost(@Body Map<String, String> postDetails);
 

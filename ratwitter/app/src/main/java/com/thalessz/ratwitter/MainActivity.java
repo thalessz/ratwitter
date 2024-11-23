@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.thalessz.ratwitter.dao.PostDAO;
 import com.thalessz.ratwitter.dao.UserDAO;
 import com.thalessz.ratwitter.models.PostUser;
@@ -51,6 +52,22 @@ public class MainActivity extends AppCompatActivity {
 
         setupWindowInsets();
 
+        // Configuração do Bottom Navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    // Já estamos na Home, não faz nada
+                    return true;
+                case R.id.navigation_profile:
+                    // Inicia a Activity de Meu Perfil
+                    Intent intent = new Intent(MainActivity.this, MeuPerfil.class);
+                    startActivity(intent);
+                    return true;
+            }
+            return false;
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
@@ -72,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
+
         btnRatear.setOnClickListener(v -> postarRateada());
     }
 

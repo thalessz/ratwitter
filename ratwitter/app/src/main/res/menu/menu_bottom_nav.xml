@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="Home"
+        android:icon="@android:drawable/ic_menu_zoom"/>
 
+    <item
+        android:id="@+id/navigation_profile"
+        android:title="Meu Perfil"
+        android:icon="@android:drawable/alert_dark_frame"/>
 </menu>
