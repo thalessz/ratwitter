@@ -1,13 +1,12 @@
 package com.thalessz.ratwitter
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.ProgressBar
+import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -16,9 +15,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.gson.Gson
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import com.thalessz.ratwitter.dao.PostDAO
 import com.thalessz.ratwitter.dao.UserDAO
 import com.thalessz.ratwitter.models.PostUser
@@ -39,8 +37,7 @@ class MeuPerfil : AppCompatActivity() {
 
         setupWindowInsets()
 
-        val sharedPreferences: SharedPreferences = getSharedPreferences("Config", MODE_PRIVATE)
-        user = getUserFromPreferences(sharedPreferences)
+        user = getUserFromIntent()
 
         if (user != null) {
             Toast.makeText(this, "Nome: ${user?.username}", Toast.LENGTH_SHORT).show()
@@ -52,9 +49,37 @@ class MeuPerfil : AppCompatActivity() {
 
         val txtProfileName: TextView = findViewById(R.id.txt_profile_name)
         val txtProfileUsername: TextView = findViewById(R.id.txt_profile_username)
+        val BtnSair: ImageButton = findViewById(R.id.btnSair)
+
+        val sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE)
+        val json = sharedPreferences.getString("user", null)
+        lateinit var whoami: User
+        if (json != null) {
+            whoami = Gson().fromJson(json, User::class.java)
+        }
+
+        if (whoami.username != user?.username) {
+            BtnSair.visibility = View.GONE
+        } else {
+            BtnSair.visibility = View.VISIBLE
+        }
+
+        BtnSair.setOnClickListener {
+            val editor = sharedPreferences.edit()
+            editor.clear()
+            editor.apply()
+
+            val intent = Intent(this, Login::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+
+
+
         recyclerView = findViewById(R.id.rcw_posts_profile)
 
-        txtProfileName.text = user?.nome
+        txtProfileName.text = user?.nome ?: "Nome não disponível"
         txtProfileUsername.text = "@${user?.username}"
 
         fetchUserIdAndPosts(user?.username)
@@ -82,19 +107,24 @@ class MeuPerfil : AppCompatActivity() {
     }
 
     private fun fetchUserIdAndPosts(username: String?) {
-        UserDAO.fetchUserId(username, object : UserDAO.FetchUserIdCallback {
-            override fun onSuccess(userId: Int) {
-                fetchPostsByUid(userId)
-                recyclerView.layoutManager = LinearLayoutManager(this@MeuPerfil)
-                postAdapter = PostAdapter(postUsers, userId)
-                recyclerView.adapter = postAdapter
-            }
+        username?.let {
+            UserDAO.fetchUserId(it, object : UserDAO.FetchUserIdCallback {
+                override fun onSuccess(userId: Int) {
+                    fetchPostsByUid(userId)
+                    recyclerView.layoutManager = LinearLayoutManager(this@MeuPerfil)
+                    postAdapter = PostAdapter(postUsers, userId)
+                    recyclerView.adapter = postAdapter
+                }
 
-            override fun onFailure(errorMessage: String) {
-                Log.e("FetchID", "Erro ao buscar ID do usuário: $errorMessage")
-                Toast.makeText(this@MeuPerfil, "Erro ao buscar ID do usuário.", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(errorMessage: String) {
+                    Log.e("FetchID", "Erro ao buscar ID do usuário: $errorMessage")
+                    Toast.makeText(this@MeuPerfil, "Erro ao buscar ID do usuário.", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } ?: run {
+            Log.e("FetchID", "Nome de usuário é nulo.")
+            Toast.makeText(this, "Nome de usuário é nulo.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun fetchPostsByUid(userId: Int) {
@@ -117,8 +147,8 @@ class MeuPerfil : AppCompatActivity() {
         })
     }
 
-    private fun getUserFromPreferences(sharedPreferences: SharedPreferences): User? {
-        val json = sharedPreferences.getString("user", null)
+    private fun getUserFromIntent(): User? {
+        val json = intent.getStringExtra("user")
         return if (json != null) Gson().fromJson(json, User::class.java) else null
     }
 
@@ -131,7 +161,7 @@ class MeuPerfil : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 Toast.makeText(this, "Logout selecionado", Toast.LENGTH_SHORT).show()
-                finish()
+                finish() // Ou qualquer outra ação que você queira realizar no logout.
                 true
             }
             else -> super.onOptionsItemSelected(item)

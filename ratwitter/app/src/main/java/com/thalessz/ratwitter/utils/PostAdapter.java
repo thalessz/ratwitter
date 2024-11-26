@@ -1,7 +1,9 @@
 package com.thalessz.ratwitter.utils;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static com.thalessz.ratwitter.utils.DateFormatter.formatDate;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +16,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.thalessz.ratwitter.MainActivity;
+import com.thalessz.ratwitter.MeuPerfil;
 import com.thalessz.ratwitter.R;
+import com.thalessz.ratwitter.VisualizarPost;
 import com.thalessz.ratwitter.dao.PostDAO;
+import com.thalessz.ratwitter.models.Post;
 import com.thalessz.ratwitter.models.PostUser;
+import com.thalessz.ratwitter.models.User;
 import com.thalessz.ratwitter.retrofit.RetrofitClient;
 
 import java.util.HashMap;
@@ -70,7 +78,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 unlikePost(postUser.getPost().getId(), holder, postUser);
             }
         });
+
+        holder.imageView.setOnClickListener(v -> showProfile(postUser.getUser(), v));
+        holder.tvwNome.setOnClickListener(v -> showProfile(postUser.getUser(), v));
+        holder.tvwUsername.setOnClickListener(v -> showProfile(postUser.getUser(), v));
+
+        holder.itemView.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), VisualizarPost.class);
+            intent.putExtra("postUser", new Gson().toJson(postUser));
+            intent.putExtra("currentUID", currentUID);
+            v.getContext().startActivity(intent);
+        });
+
     }
+
+    private void showProfile(User user, View v) {
+        Intent intent = new Intent(v.getContext(), MeuPerfil.class);
+        intent.putExtra("user", new Gson().toJson(user));
+
+        v.getContext().startActivity(intent);
+    }
+
 
     private void checkIfLiked(int postId, int userId, PostViewHolder holder) {
         postDAO.checkIfLiked(postId, userId, new PostDAO.CheckLikeCallback() {

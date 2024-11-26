@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     // Inicia a Activity de Meu Perfil
                     Intent intent = new Intent(MainActivity.this, MeuPerfil.class);
+                    intent.putExtra("user", new Gson().toJson(user));
                     startActivity(intent);
                     return true;
             }
