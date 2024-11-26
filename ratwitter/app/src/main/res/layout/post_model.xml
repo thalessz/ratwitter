@@ -28,8 +28,8 @@
                 android:id="@+id/tvwNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="20dp"
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,35 +38,35 @@
                 android:id="@+id/tvwUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginStart="72dp"
+                android:layout_marginTop="40dp"
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="48dp"
-                android:layout_height="43dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_image"
                 app:layout_constraintBottom_toTopOf="@+id/tvwPostContent"
                 app:layout_constraintEnd_toStartOf="@+id/tvwUsername"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.333"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintVertical_bias="0.21"
                 tools:srcCompat="@drawable/rato" />
 
             <TextView
                 android:id="@+id/tvwPostContent"
-                android:layout_width="361dp"
+                android:layout_width="305dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="68dp"
+                android:layout_marginTop="76dp"
                 android:text="@string/lorem"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.615"
+                app:layout_constraintHorizontal_bias="0.8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

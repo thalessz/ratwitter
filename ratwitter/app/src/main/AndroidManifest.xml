@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".VisualizarPost"
+            android:exported="false" />
+        <activity
             android:name=".MeuPerfil"
             android:exported="false" />
         <activity

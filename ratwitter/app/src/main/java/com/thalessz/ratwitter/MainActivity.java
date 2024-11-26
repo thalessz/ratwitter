@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setupWindowInsets();
 
         // Configuração do Bottom Navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_perfil);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
     }
