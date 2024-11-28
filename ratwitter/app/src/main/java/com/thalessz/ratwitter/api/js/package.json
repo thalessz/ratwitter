@@ -1,11 +1,13 @@
 {
-  "name": "js",
+  "name": "ratwitter",
   "version": "2.0.0",
   "description": "API RESTful minimalista para uma rede social semelhante ao Twitter.",
-  "main": "server.js",
+  "main": "src/server.js",
+  "bin": "src/server.js",
   "scripts": {
-    "start": "node ./src/server.js",
+    "start": "nodemon ./src/server.js",
     "dev": "nodemon ./src/server.js",
+    "build": "nexe src/server.js -o ratwitter.exe", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

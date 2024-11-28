@@ -16,10 +16,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".VisualizarPost"
+            android:name=".activities.VisualizarPost"
             android:exported="false" />
         <activity
-            android:name=".MeuPerfil"
+            android:name=".activities.MeuPerfil"
             android:exported="false" />
         <activity
             android:name=".TelaInicial"
@@ -27,13 +27,13 @@
             android:label="@string/title_activity_tela_inicial"
             android:theme="@style/Theme.Ratwitter.NoActionBar" />
         <activity
-            android:name=".Cadastro"
+            android:name=".activities.Cadastro"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".activities.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

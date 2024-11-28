@@ -1,4 +1,4 @@
-package com.thalessz.ratwitter
+package com.thalessz.ratwitter.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import com.thalessz.ratwitter.R
 import com.thalessz.ratwitter.dao.PostDAO
 import com.thalessz.ratwitter.dao.UserDAO
 import com.thalessz.ratwitter.models.PostUser
@@ -38,14 +39,6 @@ class MeuPerfil : AppCompatActivity() {
         setupWindowInsets()
 
         user = getUserFromIntent()
-
-        if (user != null) {
-            Toast.makeText(this, "Nome: ${user?.username}", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
 
         val txtProfileName: TextView = findViewById(R.id.txt_profile_name)
         val txtProfileUsername: TextView = findViewById(R.id.txt_profile_username)

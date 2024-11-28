@@ -1,4 +1,4 @@
-package com.thalessz.ratwitter;
+package com.thalessz.ratwitter.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.gson.Gson;
+import com.thalessz.ratwitter.R;
 import com.thalessz.ratwitter.dao.UserDAO;
 import com.thalessz.ratwitter.models.User;
 

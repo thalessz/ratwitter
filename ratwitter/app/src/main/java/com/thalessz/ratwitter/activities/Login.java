@@ -1,4 +1,4 @@
-package com.thalessz.ratwitter;
+package com.thalessz.ratwitter.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.gson.Gson;
+import com.thalessz.ratwitter.R;
 import com.thalessz.ratwitter.dao.UserDAO;
 import com.thalessz.ratwitter.models.User;
 import com.thalessz.ratwitter.retrofit.ApiService;
@@ -45,7 +46,7 @@ public class Login extends AppCompatActivity {
             String username = txtUsuario.getText().toString();
             String senha = txtSenha.getText().toString();
 
-            userDAO.login(username, senha, new UserDAO.LoginCallback() {
+            UserDAO.login(username, senha, new UserDAO.LoginCallback() {
                 @Override
                 public void onSuccess(User user) {
                     SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);

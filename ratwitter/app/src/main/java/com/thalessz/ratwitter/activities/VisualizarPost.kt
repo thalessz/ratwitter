@@ -1,6 +1,5 @@
-package com.thalessz.ratwitter
+package com.thalessz.ratwitter.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,9 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.thalessz.ratwitter.R
 import com.thalessz.ratwitter.dao.PostDAO
 import com.thalessz.ratwitter.models.PostUser
 import com.thalessz.ratwitter.retrofit.RetrofitClient
+import java.util.Locale
 
 class VisualizarPost : AppCompatActivity() {
     private lateinit var tvwNome: TextView
@@ -39,7 +40,6 @@ class VisualizarPost : AppCompatActivity() {
 
         postDAO = PostDAO(RetrofitClient.getApiService())
 
-        // Recupera o PostUser e currentUID passados pela Intent
         val postUserJson = intent.getStringExtra("postUser")
         currentUserId = intent.getIntExtra("currentUID", 0) // Recebendo o currentUID
 
@@ -48,7 +48,6 @@ class VisualizarPost : AppCompatActivity() {
             displayPostDetails(postUser)
         }
 
-        // Configura o botão de curtir/descurtir
         btnLike.setOnClickListener {
             if (btnLike.text == "♥" || btnLike.text == "♡") {
                 likePost(postUser.post.id)
@@ -57,7 +56,7 @@ class VisualizarPost : AppCompatActivity() {
             }
         }
 
-        var btnVoltar: ImageButton = findViewById(R.id.btnVoltar);
+        val btnVoltar: ImageButton = findViewById(R.id.btnVoltar)
         btnVoltar.setOnClickListener {
             finish()
         }
@@ -65,9 +64,11 @@ class VisualizarPost : AppCompatActivity() {
 
     private fun displayPostDetails(postUser: PostUser) {
         tvwNome.text = postUser.user.nome
-        tvwUsername.text = "@" + postUser.user.username.toLowerCase()
+        val username = "@" + postUser.user.username.lowercase(Locale.getDefault())
+        tvwUsername.text = username
         tvwPostContent.text = postUser.post.content
-        tvwLikeCount.text = "${postUser.post.like_count} rateadas"
+        val likeCount = "${postUser.post.like_count} rateadas"
+        tvwLikeCount.text = likeCount
         imageView.setImageResource(R.drawable.rato)
 
         checkIfLiked(postUser.post.id, currentUserId)
@@ -87,16 +88,14 @@ class VisualizarPost : AppCompatActivity() {
 
     private fun likePost(postId: Int) {
         val userIdMap = mapOf("user_id" to currentUserId)
-
         postDAO.likePost(postId, userIdMap, object : PostDAO.LikePostCallback {
             override fun onSuccess(response: Map<String, String>) {
                 Toast.makeText(this@VisualizarPost, response["message"], Toast.LENGTH_SHORT).show()
-                val newLikeCount = postUser.post.like_count + 1
-                tvwLikeCount.text = "$newLikeCount rateadas"
+                val newLikeCount = "${postUser.post.like_count + 1} rateadas"
+                tvwLikeCount.text = newLikeCount
                 btnLike.text = "♥"
-                postUser.post.like_count = newLikeCount
+                postUser.post.like_count += 1
             }
-
             override fun onFailure(errorMessage: String) {
                 Toast.makeText(this@VisualizarPost, errorMessage, Toast.LENGTH_SHORT).show()
             }
@@ -107,10 +106,10 @@ class VisualizarPost : AppCompatActivity() {
         postDAO.unlikePost(postId, currentUserId, object : PostDAO.LikePostCallback {
             override fun onSuccess(response: Map<String, String>) {
                 Toast.makeText(this@VisualizarPost, response["message"], Toast.LENGTH_SHORT).show()
-                val newLikeCount = postUser.post.like_count - 1
-                tvwLikeCount.text = "$newLikeCount rateadas"
+                val newLikeCount = "${postUser.post.like_count - 1} rateadas"
+                tvwLikeCount.text = newLikeCount
                 btnLike.text = "♡"
-                postUser.post.like_count = newLikeCount
+                postUser.post.like_count -= 1
             }
 
             override fun onFailure(errorMessage: String) {

@@ -1,8 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Ratwitter" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <item name="colorPrimary">#31511E</item>
-        <item name="colorAccent">#31511E</item>
+        <!-- Paleta de cores do tema escuro -->
+        <item name="colorPrimary">#121212</item> <!-- Fundo principal escuro -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- Texto em superfícies primárias -->
+
+        <item name="colorSecondary">#000000</item> <!-- Destaque (accent) preto -->
+        <item name="colorOnSecondary">#FFFFFF</item> <!-- Texto em superfícies secundárias -->
+
+        <item name="backgroundColor">#121212</item> <!-- Fundo geral da atividade -->
+        <item name="android:colorBackground">#121212</item> <!-- Fundo explícito do layout -->
+
+        <item name="colorButtonNormal">#FFFFFF</item> <!-- Fundo dos botões -->
     </style>
 </resources>

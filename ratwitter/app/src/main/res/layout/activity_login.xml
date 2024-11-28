@@ -1,75 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    android:background="?attr/backgroundColor"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".activities.Login">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="175dp"
-        android:layout_marginTop="179dp"
-        android:layout_marginEnd="176dp"
-        android:text="Ratwitter > Login
-"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:background="?attr/colorPrimary"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="20dp">
 
-    <EditText
-        android:id="@+id/txtUsuario"
-        android:layout_width="300dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="54dp"
-        android:hint="Usuário"
-        android:background="@drawable/fundo_texto"
-        android:textColor="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/loginText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🐀 Ratwitter"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/fundo_texto"
+                android:drawablePadding="8dp"
+                android:hint="👤 Username"
+                android:padding="8dp"
+                android:textColor="?attr/colorOnPrimary" />
+
+            <EditText
+                android:id="@+id/txtSenha"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/fundo_texto"
+                android:hint="🔒 Senha"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="?attr/colorOnPrimary" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="?attr/colorSecondary"
+                android:text="Login"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="18sp"
+                app:cornerRadius="20dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/txtCadastro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-
-        android:layout_marginTop="16dp"
-        android:text="Não tem uma conta? Cadastre-se aqui."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
-
-    <EditText
-        android:id="@+id/txtSenha"
-        android:layout_width="293dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="39dp"
-        android:hint="Senha"
-        android:background="@drawable/fundo_texto"
-        android:textColor="@android:color/darker_gray"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtUsuario" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogin"
-        android:layout_width="304dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/fundo_botao"
-        android:textColor="@color/white"
-        android:fontFamily="@font/inter"
-        android:text="Login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSenha" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginBottom="20dp"
+        android:padding="8dp"
+        android:text="Não tem uma conta? Crie agora!"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp" />
+</LinearLayout>

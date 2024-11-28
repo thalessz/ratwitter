@@ -1,9 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Ratwitter" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <item name="colorPrimary">#31511E</item>
-        <item name="colorAccent">#31511E</item>
+        <!-- Paleta de cores do tema claro -->
+        <item name="colorPrimary">#FFFFFF</item> <!-- Cor primária (fundo principal claro) -->
+        <item name="colorPrimaryVariant">#F0F0F0</item> <!-- Variante da cor primária -->
+        <item name="colorOnPrimary">#000000</item> <!-- Texto em botões e superfícies primárias -->
+
+        <item name="colorSecondary">#000000</item> <!-- Cor de destaque (accent) preta -->
+        <item name="colorOnSecondary">#FFFFFF</item> <!-- Texto em superfícies secundárias -->
+
+        <item name="backgroundColor">#FFFFFF</item> <!-- Fundo da atividade -->
+        <item name="colorSurface">#FFFFFF</item> <!-- Fundo de componentes -->
+        <item name="colorOnSurface">#000000</item> <!-- Texto em superfícies -->
+
+        <item name="colorError">#B00020</item> <!-- Cor para mensagens de erro -->
+        <item name="colorOnError">#FFFFFF</item> <!-- Texto em mensagens de erro -->
+
+        <!-- Estilo dos botões -->
+        <item name="colorButtonNormal">#000000</item> <!-- Fundo dos botões -->
     </style>
 
     <style name="Theme.Ratwitter" parent="Base.Theme.Ratwitter" />

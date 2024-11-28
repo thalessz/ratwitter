@@ -5,7 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VisualizarPost">
+    android:background="?attr/backgroundColor"
+    android:backgroundTint="?attr/backgroundColor"
+    tools:context=".activities.VisualizarPost">
 
     <androidx.cardview.widget.CardView
         android:layout_width="395dp"
@@ -146,13 +148,13 @@
         android:layout_width="46dp"
         android:layout_height="43dp"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/divider4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.461"
-        app:srcCompat="@drawable/home"
-        android:backgroundTint="@android:color/transparent"
-        android:scaleType="fitCenter"/>
+        app:srcCompat="@drawable/home" />
 
     <TextView
         android:id="@+id/textView2"

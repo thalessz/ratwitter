@@ -1,6 +1,5 @@
 package com.thalessz.ratwitter.utils;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static com.thalessz.ratwitter.utils.DateFormatter.formatDate;
 
 import android.content.Intent;
@@ -17,29 +16,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.thalessz.ratwitter.MainActivity;
-import com.thalessz.ratwitter.MeuPerfil;
+import com.thalessz.ratwitter.activities.MeuPerfil;
 import com.thalessz.ratwitter.R;
-import com.thalessz.ratwitter.VisualizarPost;
+import com.thalessz.ratwitter.activities.VisualizarPost;
 import com.thalessz.ratwitter.dao.PostDAO;
-import com.thalessz.ratwitter.models.Post;
 import com.thalessz.ratwitter.models.PostUser;
 import com.thalessz.ratwitter.models.User;
 import com.thalessz.ratwitter.retrofit.RetrofitClient;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
-    private List<PostUser> postUsers;
-    private int currentUID;
-    private PostDAO postDAO;
+    private final List<PostUser> postUsers;
+    private final int currentUID;
+    private final PostDAO postDAO;
 
     public PostAdapter(List<PostUser> postUsers, int currentUID) {
         this.postUsers = postUsers;
@@ -63,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tvwPostContent.setText(postUser.getPost().getContent());
         holder.tvwLikeCount.setText(postUser.getPost().getLike_count() + " rateadas");
         holder.tvwDate.setText(formatDate(postUser.getPost().getCreated_at()));
-        holder.imageView.setImageResource(R.drawable.rato);
+        holder.imageView.setImageResource(R.drawable.profile);
 
         // Verifica se o post foi curtido pelo usuário atual
         checkIfLiked(postUser.getPost().getId(), currentUID, holder);

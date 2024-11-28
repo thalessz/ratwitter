@@ -1,4 +1,4 @@
-package com.thalessz.ratwitter;
+package com.thalessz.ratwitter.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.thalessz.ratwitter.R;
 import com.thalessz.ratwitter.dao.PostDAO;
 import com.thalessz.ratwitter.dao.UserDAO;
 import com.thalessz.ratwitter.models.PostUser;
@@ -36,20 +36,18 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
-    private List<PostUser> postUsers = new ArrayList<>();
+    private final List<PostUser> postUsers = new ArrayList<>();
     private PostDAO postDAO;
     private UserDAO userDAO;
     private EditText edtConteudo;
     private User user;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
         setupWindowInsets();
 
         // Configuração do Bottom Navigation
@@ -57,10 +55,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    // Já estamos na Home, não faz nada
-                    return true;
+                    return true; // Já estamos na Home, não faz nada
                 case R.id.navigation_profile:
-                    // Inicia a Activity de Meu Perfil
                     Intent intent = new Intent(MainActivity.this, MeuPerfil.class);
                     intent.putExtra("user", new Gson().toJson(user));
                     startActivity(intent);
@@ -71,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
         if (!isLoggedIn) {
             navigateToLogin();
             return; // Saia do método se não estiver logado
@@ -90,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnRatear = findViewById(R.id.btnRatear);
         edtConteudo = findViewById(R.id.edtConteudo);
-
         btnRatear.setOnClickListener(v -> postarRateada());
     }
 
@@ -116,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
     private void initializeViews() {
         recyclerView = findViewById(R.id.rcw_posts);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        progressBar = findViewById(R.id.progressBar);
-
         userDAO = new UserDAO(RetrofitClient.getApiService());
         postDAO = new PostDAO(RetrofitClient.getApiService());
     }
@@ -133,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Integer userId) {
                 // Atualiza o adapter com o UID obtido
                 postAdapter = new PostAdapter(postUsers, userId);
-                recyclerView.setAdapter(postAdapter);
+                recyclerView.setAdapter(postAdapter); // Configura o adapter no RecyclerView
                 fetchPosts(); // Carregar posts após configurar o adapter
             }
 
@@ -169,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Map<String, String> response) {
                         edtConteudo.setText("");
                         Toast.makeText(MainActivity.this, "Publicação adicionada com sucesso", Toast.LENGTH_SHORT).show();
-                        fetchPosts();
+                        fetchPosts(); // Atualiza a lista de posts após adicionar um novo
                     }
 
                     @Override
@@ -188,29 +180,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchPosts() {
-        recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        swipeRefreshLayout.setRefreshing(true);
+        recyclerView.setVisibility(View.GONE); // Esconde o RecyclerView enquanto carrega os dados
+        swipeRefreshLayout.setRefreshing(true); // Ativa a animação de carregamento
 
         postDAO.fetchPosts(new PostDAO.FetchPostsWithUsersCallback() {
             @Override
             public void onSuccess(List<PostUser> postsWithUsers) {
-                postUsers.clear();
-                postUsers.addAll(postsWithUsers);
-                postAdapter.notifyDataSetChanged();
+                postUsers.clear(); // Limpa a lista anterior de posts
+                postUsers.addAll(postsWithUsers); // Adiciona os novos posts à lista
+                postAdapter.notifyDataSetChanged(); // Notifica o adapter sobre as mudanças nos dados
 
-                progressBar.setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
-                recyclerView.setVisibility(View.VISIBLE);
+                swipeRefreshLayout.setRefreshing(false); // Desativa a animação de carregamento
+                recyclerView.setVisibility(View.VISIBLE); // Mostra o RecyclerView novamente
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 Log.e("FetchPosts", "Erro ao buscar posts: " + errorMessage);
-
-                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-
                 Toast.makeText(MainActivity.this, "Erro ao carregar posts.", Toast.LENGTH_SHORT).show();
             }
         });

@@ -16,7 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostDAO {
-    private ApiService apiService;
+    private final ApiService apiService;
 
     public PostDAO(ApiService apiService) {
         this.apiService = apiService;
